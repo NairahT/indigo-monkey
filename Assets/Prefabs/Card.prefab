@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 6345177259195890523}
   - component: {fileID: 6345177259195890517}
   - component: {fileID: 6345177259195890522}
+  - component: {fileID: 284501108}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -117,7 +118,7 @@ RectTransform:
   m_GameObject: {fileID: 6345177259195890521}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -662.4865}
-  m_LocalScale: {x: 10.0938835, y: 10.0938835, z: 2.5234709}
+  m_LocalScale: {x: 70.22258, y: 70.22258, z: 17.555645}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6345177259071771887}
@@ -195,6 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardType: 0
   cardState: 0
+  animator: {fileID: 284501108}
 --- !u!61 &6345177259195890522
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -221,3 +223,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!95 &284501108
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6345177259195890521}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 413cf5839a3c408429f55782f8970fef, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

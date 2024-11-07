@@ -9,6 +9,8 @@ public class Card : MonoBehaviour
     public CardType cardType;
     public CardState cardState;
 
+    public Animator animator;
+
     private void OnMouseDown()
     {
         Debug.Log($"Clicked card of type {cardType}");
@@ -16,6 +18,11 @@ public class Card : MonoBehaviour
         if(cardState == CardState.Unflipped)
         {
             OnCardSelected?.Invoke(this);
+            animator.SetTrigger("Open");
+
+            cardState = CardState.Flipped;
         }
     }
+
+    
 }
