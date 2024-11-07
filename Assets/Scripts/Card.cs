@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class Card : MonoBehaviour
 {
-    [SerializeField]
-    private CardType cardType;
+    public static event Action<Card> OnCardSelected;
 
-    [SerializeField]
-    private CardState cardState;
+    public CardType cardType;
+    public CardState cardState;
 
     private void OnMouseDown()
     {
         Debug.Log($"Clicked card of type {cardType}");
+
+        if(cardState == CardState.Unflipped)
+        {
+            OnCardSelected?.Invoke(this);
+        }
     }
 }
