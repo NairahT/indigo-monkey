@@ -7,6 +7,9 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+
+    public Card[] cards;
+
     public Card firstCard;
     public Card secondCard;
 
@@ -20,11 +23,59 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        InitializeGame();
+    }
+
+    void Shuffle(Card[] cards)
+    {
+        for (int i = cards.Length - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            Card temp = cards[i];
+            cards[i] = cards[randomIndex];
+            cards[randomIndex] = temp;
+        }
+    }
+
+    private void InitializeGame()
+    {
         cardCounter = 0;
         score = 0;
         streak = 0;
 
         UpdateScoreAndStreakUI();
+
+        cards = FindObjectsOfType<Card>();
+        Shuffle(cards);
+
+        // Update the hierarchy based on the shuffled array
+        for (int i = 0; i < cards.Length; i++)
+        {
+            cards[i].transform.SetSiblingIndex(i);
+        }
+
+        StartCoroutine(ShowCardsAtStart());
+    }
+
+    public void RestartGame()
+    {
+        InitializeGame();
+    }
+
+    private IEnumerator ShowCardsAtStart()
+    {
+
+        for(int i =0; i <cards.Length; i++)
+        {
+            cards[i].FlipOpen();
+        }
+
+        yield return new WaitForSeconds(5f);
+
+        for (int i = 0; i < cards.Length; i++)
+        {
+            cards[i].FlipClose();
+        }
     }
 
     void OnEnable()

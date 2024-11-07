@@ -24,5 +24,18 @@ public class Card : MonoBehaviour
         }
     }
 
-    
+    public void FlipOpen()
+    {
+        if (cardState == CardState.Unflipped)
+        {
+            animator.SetTrigger("Open");
+            cardState = CardState.Flipped;
+        }
+    }
+
+    public void FlipClose()
+    {
+        animator.SetTrigger("Close");
+        cardState = CardState.Unflipped;
+    }
 }
