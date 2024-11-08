@@ -7,7 +7,6 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-
     public Card[] cards;
 
     public Card firstCard;
