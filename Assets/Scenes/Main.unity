@@ -694,7 +694,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1204,7 +1204,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1459,9 +1459,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 757c0a2ea409031479a5e82a92f01aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridContainer: {fileID: 23461801}
   cards: []
   firstCard: {fileID: 0}
   secondCard: {fileID: 0}
+  cardCounter: 0
   scoreText: {fileID: 656962735}
   streakText: {fileID: 1252661068}
 --- !u!1001 &1626915404

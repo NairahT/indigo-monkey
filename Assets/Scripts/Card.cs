@@ -38,4 +38,14 @@ public class Card : MonoBehaviour
         animator.SetTrigger("Close");
         cardState = CardState.Unflipped;
     }
+
+    public void DisableClicking()
+    {
+        BoxCollider2D cardCollider = GetComponent<BoxCollider2D>();
+        if(cardCollider!=null)
+        {
+            cardCollider.enabled = false;
+        }
+    
+    }
 }
