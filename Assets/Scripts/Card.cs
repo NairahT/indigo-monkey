@@ -17,10 +17,10 @@ public class Card : MonoBehaviour
 
         if(cardState == CardState.Unflipped)
         {
-            OnCardSelected?.Invoke(this);
             animator.SetTrigger("Open");
-
             cardState = CardState.Flipped;
+            OnCardSelected?.Invoke(this);
+           
         }
     }
 

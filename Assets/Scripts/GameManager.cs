@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public Card firstCard;
     public Card secondCard;
 
-    private int cardCounter; //To keep track of the current pair of selected cards
+    public int cardCounter; //To keep track of the current pair of selected cards
 
     private int score;
     private int streak;
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
             cards[i].FlipOpen();
         }
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
 
         for (int i = 0; i < cards.Length; i++)
         {
