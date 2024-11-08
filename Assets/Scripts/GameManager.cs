@@ -8,38 +8,114 @@ using System.IO;
 public class GameManager : MonoBehaviour
 {
     public Transform gridContainer;
+
+    private Dictionary<int, Card> cardsDictionary; // Stores the hierarchy index and the corresponding Card
     public Card[] cards;
 
-    public Card firstCard;
-    public Card secondCard;
+    [SerializeField]
+    private List<int> currentShuffledOrder; // Stores the shuffled order during runtime
 
-    public int cardCounter; //To keep track of the current pair of selected cards
+    [SerializeField]
+    private Card firstCard;
+    [SerializeField]
+    private Card secondCard;
+
+    private int cardCounter; //To keep track of the current pair of selected cards
 
     private int score;
     private int streak;
     private int scoreToWin;
 
+    // To update the score and streak score text
     public TMP_Text scoreText;
     public TMP_Text streakText;
 
     private string saveFilePath;
+
+    private bool didWin;
+
     void Start()
     {
         saveFilePath = Path.Combine(Application.persistentDataPath, "savedData.json");
-        Debug.Log(saveFilePath);
 
-        InitializeGame();
-      //  LoadGame();
+        // Calculate score needed to win based on maximum amount of matches that can be made * 10 for the score value
+        scoreToWin = cards.Length / 2;
+        scoreToWin *= 10;
+
+
+        if (File.Exists(saveFilePath))
+        {
+            LoadGame();
+        } else
+        {
+            InitializeGame();
+        }
+    }
+
+    private void InitializeGame()
+    {
+        cardCounter = 0;
+        score = 0;
+        streak = 0;
+
+        UpdateScoreAndStreakUI();
+
+        // Initialize the dictionary with the card's index and card object
+        cardsDictionary = new Dictionary<int, Card>();
+        for (int i = 0; i < cards.Length; i++)
+        {
+            cardsDictionary.Add(i, cards[i]);
+        }
+
+        ShuffleCards();
+
+        StartCoroutine(ShowCardsAtStart());
+    }
+
+    void ShuffleCards()
+    {
+        // Create a list of keys (indices) to shuffle
+        List<int> keys = new List<int>(cardsDictionary.Keys);
+
+        // Shuffle the keys list
+        for (int i = keys.Count - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            int temp = keys[i];
+            keys[i] = keys[randomIndex];
+            keys[randomIndex] = temp;
+        }
+
+        // Apply the shuffled order by updating the sibling indices of the cards
+        for (int i = 0; i < keys.Count; i++)
+        {
+            int key = keys[i];
+            cardsDictionary[key].transform.SetSiblingIndex(i);
+        }
+
+        // Store the current shuffled order to save later
+        currentShuffledOrder = new List<int>(keys);
     }
 
     private void OnApplicationQuit()
     {
-        SaveGame();
+        // Only save if the player hasn't won the round yet
+        if(!didWin)
+        {
+            SaveGame();
+        }
     }
 
     private void WinGame()
     {
         Debug.Log("Game won!");
+        didWin = true;
+
+        // Check if the save file exists, and delete it as we will start a fresh game with no need to load an old save
+        if (File.Exists(saveFilePath))
+        {
+            File.Delete(saveFilePath);
+        }
     }
 
     private void SaveGame()
@@ -48,7 +124,9 @@ public class GameManager : MonoBehaviour
         {
             savedScore = score,
             savedStreak = streak,
-            savedCardCounter = cardCounter
+            savedCardCounter = cardCounter,
+            savedFirstCard = firstCard,
+            savedSecondCard = secondCard
         };
 
         foreach (Card card in cards)
@@ -57,11 +135,13 @@ public class GameManager : MonoBehaviour
             {
                 cardId = card.transform.GetSiblingIndex(), // Use the sibling index as the ID
                 cardType = card.cardType,
-                isFlipped = card.cardState == CardState.Flipped
-                
+                isFlipped = card.cardState == CardState.Flipped 
             };
-            saveData.cards.Add(cardData);
+            saveData.savedCards.Add(cardData);
         }
+
+        // Save the shuffled order of cards
+        saveData.savedShuffledOrder = currentShuffledOrder;
 
         // Convert saveData to JSON
         string json = JsonUtility.ToJson(saveData, true);
@@ -73,81 +153,51 @@ public class GameManager : MonoBehaviour
 
     private void LoadGame()
     {
-        if (File.Exists(saveFilePath))
+        // Read JSON from file
+        string json = File.ReadAllText(saveFilePath);
+        SaveData saveData = JsonUtility.FromJson<SaveData>(json);
+
+        // Load score and streak
+        score = saveData.savedScore;
+        streak = saveData.savedStreak;
+        cardCounter = saveData.savedCardCounter;
+        currentShuffledOrder = saveData.savedShuffledOrder;
+
+        if (saveData.savedFirstCard != null)
         {
-            // Read JSON from file
-            string json = File.ReadAllText(saveFilePath);
-            SaveData saveData = JsonUtility.FromJson<SaveData>(json);
-
-            // Load score and streak
-            score = saveData.savedScore;
-            streak = saveData.savedStreak;
-            cardCounter = saveData.savedCardCounter;
-
-            UpdateScoreAndStreakUI();
-
-            // Load card states
-            foreach (CardData cardData in saveData.cards)
-            {
-                Card card = gridContainer.GetChild(cardData.cardId).GetComponent<Card>();
-                if (card != null)
-                {
-                    card.cardType = cardData.cardType;
-                    if (cardData.isFlipped)
-                    {
-                        card.FlipOpen();
-                    }
-                    else
-                    {
-                        card.FlipClose();
-                    }
-                }
-            }
-
-            Debug.Log("Game Loaded");
+            firstCard = saveData.savedFirstCard;
         }
-        else
+
+        if (saveData.savedSecondCard != null)
         {
-            Debug.Log("No save file found. Starting new game.");
+            secondCard = saveData.savedSecondCard;
         }
-    }
-
-    void Shuffle(Card[] cards)
-    {
-        for (int i = cards.Length - 1; i > 0; i--)
-        {
-            int randomIndex = UnityEngine.Random.Range(0, i + 1);
-            Card temp = cards[i];
-            cards[i] = cards[randomIndex];
-            cards[randomIndex] = temp;
-        }
-    }
-
-    private void InitializeGame()
-    {
-        cardCounter = 0;
-        score = 0;
-        streak = 0;
-
 
         UpdateScoreAndStreakUI();
 
-        cards = FindObjectsOfType<Card>();
-
-        // Calculate score needed to win based on maximum amount of matches that can be made * 10 for the score value
-        scoreToWin = cards.Length / 2;
-        scoreToWin *= 10;
-        
-        Shuffle(cards);
-
-        // Update the hierarchy based on the shuffled array
         for (int i = 0; i < cards.Length; i++)
         {
-            cards[i].transform.SetSiblingIndex(i);
+            cards[currentShuffledOrder[i]].transform.SetSiblingIndex(i);
         }
 
-        StartCoroutine(ShowCardsAtStart());
+        // Load card states
+        foreach (CardData cardData in saveData.savedCards)
+        {
+            Card card = gridContainer.GetChild(cardData.cardId).GetComponent<Card>();
+
+            if (card != null)
+            {
+                card.cardType = cardData.cardType;
+                if (cardData.isFlipped)
+                {
+                    card.FlipOpen();
+                }
+            }
+        }
+
+        Debug.Log("Game Loaded");
     }
+
 
     public void RestartGame()
     {

@@ -1,8 +1,10 @@
 public enum CardType
 {
-    Cherry,
+    Apple,
     Banana,
-    Apple
+    Grape,
+    Orange,
+    Pear
 };
 
 public enum CardState
