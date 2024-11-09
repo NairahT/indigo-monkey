@@ -19,6 +19,7 @@ public class Card : MonoBehaviour
         {
             animator.SetTrigger("Open");
             cardState = CardState.Flipped;
+            AudioManager.instance.PlayFlipAudio();
             OnCardSelected?.Invoke(this);
         }
     }
@@ -28,6 +29,7 @@ public class Card : MonoBehaviour
         if (cardState == CardState.Unflipped)
         {
             animator.SetTrigger("Open");
+            AudioManager.instance.PlayFlipAudio();
             cardState = CardState.Flipped;
         }
     }

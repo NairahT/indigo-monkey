@@ -63,6 +63,7 @@ public class SaveLoadManager : MonoBehaviour
         // Check if the save file exists, and delete it as we will start a fresh game with no need to load an old save
         if (File.Exists(saveFilePath))
         {
+            Debug.Log("Deleting save file");
             File.Delete(saveFilePath);
         }
     }

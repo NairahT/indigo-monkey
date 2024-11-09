@@ -11,17 +11,6 @@ public class GameManager : MonoBehaviour
     public CardManager cardManager;
     public SaveLoadManager saveLoadManager;
 
-    public Transform gridContainer;
-
-    private Dictionary<int, Card> cardsDictionary; // Stores the hierarchy index and the corresponding Card
-    public Card[] cards;
-
-    [SerializeField]
-    private List<int> currentShuffledOrder; // Stores the shuffled order during runtime
-
-    private string saveFilePath;
-
-    //starts here
     public Card firstCard;
     public Card secondCard;
 
@@ -44,7 +33,7 @@ public class GameManager : MonoBehaviour
         didWin = false;
 
         // Calculate score needed to win based on maximum amount of matches that can be made * 10 for the score value
-        scoreToWin = cards.Length / 2;
+        scoreToWin = cardManager.cards.Length / 2;
         scoreToWin *= 10;
 
         // Check if there's save data to be loaded, else initialize the game as new
@@ -121,6 +110,8 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log($"Match made successfully between {firstCard.cardType} and {secondCard.cardType}");
 
+            AudioManager.instance.PlayMatchAudio();
+
             firstCard.animator.SetTrigger("Win");
             secondCard.animator.SetTrigger("Win");
 
@@ -138,6 +129,9 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log($"Unsuccessful card match between {firstCard.cardType} and {secondCard.cardType}");
+
+            AudioManager.instance.PlayWrongAudio();
+
             firstCard.animator.SetTrigger("Close");
             secondCard.animator.SetTrigger("Close");
 
@@ -189,8 +183,9 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        //Enable the game over menu
+        //Enable the game over menu and play winning audio clip
         GameOverMenu.SetActive(true);
+        AudioManager.instance.PlayWinAudio();
     }
 
     private void LoadGame(SaveData saveData)
