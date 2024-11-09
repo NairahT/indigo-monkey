@@ -15,8 +15,6 @@ public class SaveData
 
     // Save the shuffled order of cards
     public List<int> savedShuffledOrder = new List<int>();
-
-    
 }
 
 [Serializable]

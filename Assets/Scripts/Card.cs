@@ -20,7 +20,6 @@ public class Card : MonoBehaviour
             animator.SetTrigger("Open");
             cardState = CardState.Flipped;
             OnCardSelected?.Invoke(this);
-           
         }
     }
 
@@ -46,6 +45,5 @@ public class Card : MonoBehaviour
         {
             cardCollider.enabled = false;
         }
-    
     }
 }
