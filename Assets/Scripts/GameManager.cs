@@ -194,24 +194,15 @@ public class GameManager : MonoBehaviour
         streak = saveData.savedStreak;
         cardCounter = saveData.savedCardCounter;
 
-        if (saveData.savedFirstCard != null)
-        {
-            firstCard = saveData.savedFirstCard;
-        }
-
-        if (saveData.savedSecondCard != null)
-        {
-            secondCard = saveData.savedSecondCard;
-        }
-
         UpdateScoreAndStreakUI();
 
         cardManager.ApplyShuffledOrder(saveData.savedShuffledOrder);
+        firstCard = cardManager.GetFirstCard(saveData.savedFirstCardIndex);
 
         // Load card states
         foreach (CardData cardData in saveData.savedCards)
         {
-            Card card = gridContainer.GetChild(cardData.cardId).GetComponent<Card>();
+            Card card = cardManager.gridContainer.GetChild(cardData.cardId).GetComponent<Card>();
 
             if (card != null)
             {
@@ -237,4 +228,6 @@ public class GameManager : MonoBehaviour
         saveLoadManager.DeleteSaveFile();
         SceneManager.LoadScene(0);
     }
+
+    
 }

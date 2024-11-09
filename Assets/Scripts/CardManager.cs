@@ -10,7 +10,7 @@ public class CardManager : MonoBehaviour
     public Card[] cards;
 
     public List<int> currentShuffledOrder; // Stores the shuffled order during runtime
-
+    public Card firstCard;
     public void InitializeCards()
     {
         // Initialize the dictionary with the card's index and card object
@@ -58,5 +58,14 @@ public class CardManager : MonoBehaviour
         {
             cards[savedOrder[i]].transform.SetSiblingIndex(i);
         }
+        currentShuffledOrder = savedOrder;
+
+    }
+
+    public Card GetFirstCard(int firstIndex)
+    {
+        int temp = currentShuffledOrder[firstIndex];
+        firstCard = cards[temp];
+        return firstCard;
     }
 }

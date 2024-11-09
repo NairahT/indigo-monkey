@@ -7,7 +7,7 @@ public class SaveLoadManager : MonoBehaviour
 {
     private string saveFilePath;
 
-    void Start()
+    void Awake()
     {
         saveFilePath = Path.Combine(Application.persistentDataPath, "savedData.json");
     }
@@ -18,10 +18,14 @@ public class SaveLoadManager : MonoBehaviour
         {
             savedScore = gameManager.score,
             savedStreak = gameManager.streak,
-            savedCardCounter = gameManager.cardCounter,
-            savedFirstCard = gameManager.firstCard,
-            savedSecondCard = gameManager.secondCard
+            savedCardCounter = gameManager.cardCounter
         };
+
+        // Determine the indices of firstCard in the shuffled order
+        if (gameManager.firstCard != null)
+        {
+            saveData.savedFirstCardIndex = gameManager.firstCard.transform.GetSiblingIndex();
+        }
 
         foreach (Card card in cardManager.cards)
         {
@@ -47,6 +51,7 @@ public class SaveLoadManager : MonoBehaviour
 
     public SaveData LoadGame()
     {
+        Debug.Log("checking for file at " + saveFilePath);
         if (File.Exists(saveFilePath))
         {
             string json = File.ReadAllText(saveFilePath);

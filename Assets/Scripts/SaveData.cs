@@ -7,11 +7,10 @@ public class SaveData
     public int savedScore;
     public int savedStreak;
     public int savedCardCounter;
-    public List<CardData> savedCards = new List<CardData>();
 
-    // The cards the player had selected
-    public Card savedFirstCard;
-    public Card savedSecondCard;
+    public int savedFirstCardIndex;
+
+    public List<CardData> savedCards = new List<CardData>();
 
     // Save the shuffled order of cards
     public List<int> savedShuffledOrder = new List<int>();
